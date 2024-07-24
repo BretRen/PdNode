@@ -1,14 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>数组A2</title>
+    <meta charset="UTF-8">
+    <title>视频录制与播放</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+        }
+        video {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:disabled {
+            background-color: #aaa;
+        }
+    </style>
 </head>
-
 <body>
-  <script src="JS/A2.js"></script>
+    <h1>视频录制与播放</h1>
+    <div class="container">
+        <video id="video" autoplay></video>
+        <video id="playback" controls></video>
+        <div class="controls">
+            <button id="startBtn">开始录制</button>
+            <button id="stopBtn" disabled>停止录制</button>
+            <button id="playBtn" disabled>播放录制</button>
+        </div>
+    </div>
+    <script src="JS/A2.js"></script>
 </body>
-
 </html>
