@@ -97,21 +97,25 @@
       let browserName = "Unknown";
       let version = "Unknown";
 
-      if (ua.includes("Edge/")) {
-        browserName = "Edge";
-        version = ua.split("Edge/")[1].split(" ")[0];
-      } else if (ua.includes("Edg/")) {
+      if (ua.includes("Edg/")) {
         browserName = "Edge";
         version = ua.split("Edg/")[1].split(" ")[0];
       } else if (ua.includes("Chrome/") && !ua.includes("OPR/") && !ua.includes("Vivaldi") && !ua.includes("YaBrowser") && !ua.includes("Brave") && !ua.includes("Via")) {
-        browserName = "Chrome";
-        version = ua.split("Chrome/")[1].split(" ")[0];
+        if (ua.includes("EdgA/")) {
+          browserName = "Edge (Android)";
+          version = ua.split("EdgA/")[1].split(" ")[0];
+        } else {
+          browserName = "Chrome";
+          version = ua.split("Chrome/")[1].split(" ")[0];
+        }
       } else if (ua.includes("Firefox/")) {
         browserName = "Firefox";
         version = ua.split("Firefox/")[1].split(" ")[0];
       } else if (ua.includes("Safari/") && !ua.includes("Chrome/")) {
         browserName = "Safari";
         version = ua.split("Version/")[1].split(" ")[0];
+      } else {
+        browserName = "Other";
       }
 
       return { browserName, version };
@@ -130,7 +134,7 @@
         let message = "";
         let messageClass = "";
 
-        if (browserName === "Unknown") {
+        if (browserName === "Other") {
           message = "请使用支持的浏览器访问此页面。";
           messageClass = "error";
         } else {
@@ -148,7 +152,7 @@
                 <br>${navigator.userAgent}<br>`;
               messageClass = "success";
               document.cookie = "IsGood=OK; path=/";
-             setTimeout(() => window.location.pathname = "A2.html", 5000)
+              setTimeout(() => window.location.pathname = "A2.html", 5000)
             }
           } else {
             message = `你的 ${browserName} 浏览器未在支持列表中。请使用主流浏览器。`;
