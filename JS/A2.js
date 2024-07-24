@@ -19,11 +19,62 @@ if (checkCookie("IsGood") != true) {
 
 }
 
+const video = document.getElementById('video');
+const playback = document.getElementById('playback');
+const startBtn = document.getElementById('startBtn');
+const stopBtn = document.getElementById('stopBtn');
+const playBtn = document.getElementById('playBtn');
 
-let week = ["星期一", "星期二", "星期三", "星期四",
-  "星期五", "星期六", "星期日"]
-document.write("<h1>" + week[6] + "</h1>")
-console.log(week[6])
-console.log(week)
+let mediaRecorder;
+let recordedChunks = [];
+
+// 请求摄像头权限并显示视频流
+navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    .then(stream => {
+        video.srcObject = stream;
+
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
+
+        mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, { type: 'video/webm' });
+            playback.src = URL.createObjectURL(blob);
+            playBtn.disabled = false;
+            recordedChunks = [];
+        };
+    })
+    .catch(err => {
+        console.error("无法访问摄像头: ", err);
+    });
+
+startBtn.addEventListener('click', () => {
+    mediaRecorder.start();
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+    playBtn.disabled = true;
+});
+
+stopBtn.addEventListener('click', () => {
+    mediaRecorder.stop();
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+});
+
+playBtn.addEventListener('click', () => {
+    playback.play();
+});
+
+
+
+
+
+
+
+
 
 
