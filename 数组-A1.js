@@ -14,7 +14,7 @@ function checkCookie(name) {
 
 if (checkCookie("IsGood") != true) {
   if (getCookie("IsGood") != "OK") {
-    window.location.pathname = "../../../JS/例子/检测浏览器版本.html"
+    window.location.pathname = "检测浏览器版本.html"
   }
 
 }
