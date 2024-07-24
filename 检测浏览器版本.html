@@ -6,17 +6,26 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
       margin: 0;
       padding: 20px;
+      display: grid;
+      place-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .container {
+      display: grid;
+      grid-template-rows: auto auto;
+      gap: 20px;
+      width: 80%;
+      max-width: 600px;
     }
 
     .message {
       padding: 20px;
       border-radius: 5px;
-      margin: 20px auto;
-      width: 80%;
-      max-width: 600px;
+      width: 100%;
     }
 
     .error {
@@ -36,10 +45,51 @@
       color: #0c5460;
       border: 1px solid #bee5eb;
     }
+
+    .loading {
+      background-color: #ffffe0;
+      color: #333;
+      border: 1px solid #ffd700;
+    }
+
+    .spinner {
+      margin: 0 auto;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top-color: #333;
+      animation: spin 1s infinite linear;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .message {
+        padding: 10px;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <div class="container">
+    <div id="loading-message" class="message loading">
+      <br>
+      <div class="spinner"></div>
+      <br><br>
+      正在判断浏览器和浏览器版本...
+    </div>
+  </div>
+
   <script>
     function getBrowserInfo() {
       const ua = navigator.userAgent;
@@ -69,47 +119,49 @@
       return { browserName, version };
     }
 
-
-
     function checkBrowser() {
-      const { browserName, version } = getBrowserInfo();
-      const minVersions = {
-        "Chrome": "80.0",
-        "Firefox": "75.0",
-        "Safari": "13.0",
-        "Edge": "80.0",
-        "Internet Explorer": "11.0"
-      };
+      // 等待2秒后进行浏览器版本检测
+      setTimeout(() => {
+        const { browserName, version } = getBrowserInfo();
+        const minVersions = {
+          "Chrome": "80.0",
+          "Firefox": "75.0",
+          "Safari": "13.0",
+          "Edge": "80.0",
+          "Internet Explorer": "11.0"
+        };
 
-      let message = "";
-      let messageClass = "";
+        let message = "";
+        let messageClass = "";
 
-      if (browserName === "Other") {
-        message = "请使用支持的浏览器访问此页面。";
-        messageClass = "error";
-      } else {
-        const minVersion = minVersions[browserName];
-        if (minVersion) {
-          const currentVersion = version.split('.')[0] + '.' + version.split('.')[1];
-          if (parseFloat(currentVersion) < parseFloat(minVersion)) {
-            message = `你的 ${browserName} 版本 ${version} 过低，请升级到最新版本。`;
-            messageClass = "error";
-          } else {
-            message = `你的浏览器是 ${browserName} 版本 ${version}，可以正常使用。
-              <br><br>五秒后跳转……<br><br>
-              <p style="color:red;">请务必开启Cookies！
-              否则无法正常跳转！</p>`;
-            messageClass = "success";
-            document.cookie = "IsGood=OK; path=/"
-            setTimeout(() => window.location.pathname = "A2.html", 5000)
-          }
+        if (browserName === "Other") {
+          message = "请使用支持的浏览器访问此页面。";
+          messageClass = "error";
         } else {
-          message = `你的 ${browserName} 浏览器未在支持列表中。请使用主流浏览器。`;
-          messageClass = "info";
+          const minVersion = minVersions[browserName];
+          if (minVersion) {
+            const currentVersion = version.split('.')[0] + '.' + version.split('.')[1];
+            if (parseFloat(currentVersion) < parseFloat(minVersion)) {
+              message = `你的 ${browserName} 版本 ${version} 过低，请升级到最新版本。`;
+              messageClass = "error";
+            } else {
+              message = `你的浏览器是 ${browserName} 版本 ${version}，可以正常使用。
+                <br><br>五秒后跳转……<br><br>
+                <p style="color:red;">请务必开启Cookies！
+                否则无法正常跳转！</p>`;
+              messageClass = "success";
+              document.cookie = "IsGood=OK; path=/";
+              setTimeout(() => window.location.pathname = "A2.html", 5000)
+            }
+          } else {
+            message = `你的 ${browserName} 浏览器未在支持列表中。请使用主流浏览器。`;
+            messageClass = "info";
+          }
         }
-      }
 
-      document.body.innerHTML = `<div class="message ${messageClass}">${message}</div>`;
+        document.getElementById('loading-message').className = `message ${messageClass}`;
+        document.getElementById('loading-message').innerHTML = message;
+      }, 2000);
     }
 
     checkBrowser();
