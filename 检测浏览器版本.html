@@ -97,25 +97,18 @@
       let browserName = "Unknown";
       let version = "Unknown";
 
-      if (ua.includes("Edg/")) {
+      if (ua.includes("Edg/") && !ua.includes("EdgA/")) {
         browserName = "Edge";
         version = ua.split("Edg/")[1].split(" ")[0];
-      } else if (ua.includes("Chrome/") && !ua.includes("OPR/") && !ua.includes("Vivaldi") && !ua.includes("YaBrowser") && !ua.includes("Brave") && !ua.includes("Via")) {
-        if (ua.includes("EdgA/")) {
-          browserName = "Edge (Android)";
-          version = ua.split("EdgA/")[1].split(" ")[0];
-        } else {
-          browserName = "Chrome";
-          version = ua.split("Chrome/")[1].split(" ")[0];
-        }
-      } else if (ua.includes("Firefox/")) {
+      } else if (ua.includes("Chrome/") && !ua.includes("Edg/") && !ua.includes("OPR/") && !ua.includes("Vivaldi") && !ua.includes("YaBrowser") && !ua.includes("Brave") && !ua.includes("Via") && !ua.includes("Valve Steam Client")) {
+        browserName = "Chrome";
+        version = ua.split("Chrome/")[1].split(" ")[0];
+      } else if (ua.includes("Firefox/") && !ua.includes("Seamonkey/")) {
         browserName = "Firefox";
         version = ua.split("Firefox/")[1].split(" ")[0];
-      } else if (ua.includes("Safari/") && !ua.includes("Chrome/")) {
+      } else if (ua.includes("Safari/") && !ua.includes("Chrome/") && !ua.includes("Android")) {
         browserName = "Safari";
         version = ua.split("Version/")[1].split(" ")[0];
-      } else {
-        browserName = "Other";
       }
 
       return { browserName, version };
@@ -134,7 +127,7 @@
         let message = "";
         let messageClass = "";
 
-        if (browserName === "Other") {
+        if (browserName === "Unknown") {
           message = "请使用支持的浏览器访问此页面。";
           messageClass = "error";
         } else {
@@ -146,10 +139,10 @@
               messageClass = "error";
             } else {
               message = `你的浏览器是 ${browserName} 版本 ${version}，可以正常使用。
-                <br><br>五秒后跳转……<br><br>
-                <p style="color:red;">请务必开启Cookies！
-                否则无法正常跳转！</p>
-                <br>${navigator.userAgent}<br>`;
+              <br><br>五秒后跳转……<br><br>
+              <p style="color:red;">请务必开启Cookies！
+              否则无法正常跳转！</p>
+              <br>${navigator.userAgent}<br>`;
               messageClass = "success";
               document.cookie = "IsGood=OK; path=/";
               setTimeout(() => window.location.pathname = "A2.html", 5000)
