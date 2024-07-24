@@ -144,7 +144,8 @@
               message = `你的浏览器是 ${browserName} 版本 ${version}，可以正常使用。
                 <br><br>五秒后跳转……<br><br>
                 <p style="color:red;">请务必开启Cookies！
-                否则无法正常跳转！</p>`;
+                否则无法正常跳转！</p>
+                <br>${navigator.userAgent}<br>`;
               messageClass = "success";
               document.cookie = "IsGood=OK; path=/";
              setTimeout(() => window.location.pathname = "A2.html", 5000)
